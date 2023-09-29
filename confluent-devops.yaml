@@ -22,7 +22,7 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)'
     backendType: 'azurerm'
     ensureBackend: true
-    backendServiceArm: 'mt-dna-ent-dataplatforms-nonprod (ae9ff6a8-2caf-45d6-86c7-64f8fa1bf196)'
+    backendServiceArm: 'mt-dna-ent-'
     resourceGroupName: 'rg-dmp-devops-backup'
     storageAccountName: 'devopsstrterraform'
     containerName: 'terraformstatfile'
