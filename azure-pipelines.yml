@@ -1,0 +1,63 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool:
+  name: Confluent_Pool
+variables:
+    confluent_cloud_api_key: 'xxxxx'
+    confluent_cloud_api_secret: 'xxxxxxk'
+stages:
+  - stage: test
+    displayName: 'Run a multi-line script'
+    jobs:
+      - job: 
+        steps:
+        
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendServiceArm: 'ado-rg-confluent-xxxxxx'
+            backendAzureRmResourceGroupName: 'rg-xxxx-nonprod'
+            backendAzureRmStorageAccountName: 'stdxxxxdev'
+            backendAzureRmContainerName: 'devops'
+            backendAzureRmKey: 'tf/terraform.tfstate'
+            client_id: '8xxxxxxxx'
+            client_secret: 'xxxxxxxx'
+            #commandOptions: '-upgrade'
+           
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: 'ado-rg-confluent-xxxx-xxx-sc'
+            backendAzureRmStorageAccountName: 'xxxxx'
+            backendAzureRmContainerName: 'devops'
+            commandOptions: '-out=tfplan'
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            environmentServiceNameAzureRM: 'xxxx-xx-confluent-dev-sc'
+            backendAzureRmResourceGroupName: 'rg-dbw-confluent-westus-nonprod'
+            backendAzureRmStorageAccountName: 'xxxx'
+            backendAzureRmContainerName: 'devops'
+            commandOptions: '-auto-approve -input=false tfplan'
+            
+            
+            
+    
+      
+  
+  
+  
+
